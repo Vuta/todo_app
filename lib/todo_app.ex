@@ -1,6 +1,6 @@
 defmodule TodoApp do
   @moduledoc """
-  TodoApp keeps the contexts that define your domain
+  ExampleTodoApp keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless
