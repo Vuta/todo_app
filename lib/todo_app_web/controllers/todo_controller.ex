@@ -1,9 +1,10 @@
 defmodule TodoAppWeb.TodoController do
   use TodoAppWeb, :controller
-  alias TodoApp.{Repo, Todo}
+  alias TodoApp.Todos
+  alias TodoApp.Todos.Todo
 
   def index(conn, _params) do
-    todos = Repo.all(Todo)
+    todos = Todos.list_todos()
     render conn, "index.html", todos: todos
   end
 
@@ -13,8 +14,7 @@ defmodule TodoAppWeb.TodoController do
   end
 
   def create(conn, %{"todo" => todo_params}) do
-    todo_changeset = Todo.changeset(%Todo{}, todo_params)
-    case Repo.insert(todo_changeset) do
+    case Todos.insert_todo(todo_params) do
       {:ok, todo} ->
         conn
         |> put_flash(:info, "Todo #{todo.name} added")
@@ -25,16 +25,15 @@ defmodule TodoAppWeb.TodoController do
   end
 
   def show(conn, %{"id" => id}) do
-    todo = Repo.get(Todo, id)
-    todo = Repo.preload(todo, :items)
+    todo = Todos.get_todo(id)
+    todo_items = Todos.sort_all_items_of_todo(todo)
 
-    todo_items = Enum.sort(todo.items, &(&1.inserted_at >= &2.inserted_at))
     render conn, "show.html", todo: todo, todo_items: todo_items
   end
 
   def delete(conn, %{"id" => id}) do
-    todo = Repo.get(Todo, id)
-    Repo.delete(todo)
+    todo = Todos.get_todo(id)
+    Todos.delete_todo(todo)
 
     conn
     |> put_flash(:info, "Todo #{todo.name} Deleted")
