@@ -16,7 +16,12 @@ defmodule TodoAppWeb.Router do
   scope "/", TodoAppWeb do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    get "/", TodoController, :index
+    resources "/todos", TodoController do
+      resources "/items", ItemController do
+        put "/update_status", ItemController, :update_status, as: :update_status
+      end
+    end
   end
 
   # Other scopes may use custom stacks.
