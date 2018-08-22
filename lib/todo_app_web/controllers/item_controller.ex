@@ -1,22 +1,19 @@
 defmodule TodoAppWeb.ItemController do
   use TodoAppWeb, :controller
-  alias TodoApp.{Repo, Item, Todo}
+  alias TodoApp.{Items, Todos}
+  alias TodoApp.Items.Item
 
   def new(conn, %{"todo_id" => todo_id}) do
-    todo = get_todo(todo_id)
+    todo = Todos.get_todo(todo_id)
     item_changeset = Item.changeset(%Item{}, %{})
 
     render conn, "new.html", item_changeset: item_changeset, todo: todo
   end
 
   def create(conn, %{"todo_id" => todo_id, "item" => item_params}) do
-    todo = get_todo(todo_id)
-    item =
-      todo
-      |> Ecto.build_assoc(:items, item_params)
-      |> Item.changeset(item_params)
+    todo = Todos.get_todo(todo_id)
 
-    case Repo.insert(item) do
+    case Items.insert_item(item_params, todo) do
       {:ok, _} ->
         conn
         |> put_flash(:info, "New Item Added")
@@ -27,9 +24,9 @@ defmodule TodoAppWeb.ItemController do
   end
 
   def delete(conn, %{"todo_id" => todo_id, "id" => id}) do
-    todo = get_todo(todo_id)
-    item = Repo.get(Item, id)
-    Repo.delete(item)
+    todo = Todos.get_todo(todo_id)
+    item = Items.get_item(id)
+    Items.delete_item(item)
 
     conn
     |> put_flash(:info, "Item Removed")
@@ -37,16 +34,12 @@ defmodule TodoAppWeb.ItemController do
   end
 
   def update_status(conn, %{"todo_id" => todo_id, "item_id" => id}) do
-    todo = get_todo(todo_id)
-    item = Repo.get(Item, id)
+    todo = Todos.get_todo(todo_id)
+    item = Items.get_item(id)
+    Items.update_item_status(item)
 
-    item_changeset = Item.changeset(item, %{completed: !item.completed})
-
-    Repo.update(item_changeset)
     conn
     |> put_flash(:info, "Item Status Updated")
     |> redirect(to: todo_path(conn, :show, todo))
   end
-
-  defp get_todo(todo_id), do: Repo.get(Todo, todo_id)
 end

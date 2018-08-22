@@ -1,6 +1,8 @@
-defmodule TodoApp.Item do
+defmodule TodoApp.Items.Item do
   use Ecto.Schema
   import Ecto.Changeset
+  alias TodoApp.Items.Item
+  alias TodoApp.Todos.Todo
 
   @moduledoc false
 
@@ -8,12 +10,12 @@ defmodule TodoApp.Item do
     field :content, :string
     field :completed, :boolean
 
-    belongs_to :todo, TodoApp.Todo
+    belongs_to :todo, Todo
     timestamps()
   end
 
   @doc false
-  def changeset(item, attrs) do
+  def changeset(%Item{} = item, attrs) do
     item
     |> cast(attrs, [:content, :completed])
     |> validate_required([:content])
