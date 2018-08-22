@@ -1,0 +1,29 @@
+<div class="page-header">
+  <h1>
+    Todo List
+    <span style="float: right;">
+      <%= link "New Todo", to: todo_path(@conn, :new), class: "btn btn-success" %>
+    </span>
+  </h1>
+</div>
+<table class="table table-bordered">
+  <thead>
+    <th class="text-center">Index</th>
+    <th class="text-center">Name</th>
+    <th></th>
+  </thead>
+
+  <tbody>
+    <%= for {todo, index} <- Enum.with_index(@todos) do %>
+      <tr class="text-center">
+        <td><%= index + 1%></td>
+        <td><%= link todo.name, to: todo_path(@conn, :show, todo.id) %></td>
+        <td>
+          <%= link to: todo_path(@conn, :delete, todo), method: :delete, data: [confirm: "Are you sure?"] do %>
+            <i class="fas fa-times" style="color: red;"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

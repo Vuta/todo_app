@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1>
+    <%= @todo.name %>
+    <span style="float: right;">
+      <%= link "Add Item", to: todo_item_path(@conn, :new, @todo), class: "btn btn-success" %>
+    </span>
+  </h1>
+</div>
+
+<table class="table table-bordered">
+  <thead>
+    <th class="text-center">Index</th>
+    <th class="text-center">Content</th>
+    <th class="text-center">Status</th>
+    <th class="text-center">Action</th>
+  </thead>
+  <tbody>
+    <%= for {item, index} <- Enum.with_index(@todo_items) do %>
+      <tr class="text-center">
+        <td><%= index + 1 %></td>
+        <td><%= item.content %></td>
+        <td>
+          <span class="<%= item_status_class(item) %>">
+            <%= item_status(item) %>
+          </span>
+        </td>
+        <td>
+          <%= link to: todo_item_update_status_path(@conn, :update_status, @todo, item), method: :put do %>
+            <i class="fas fa-check"></i>
+          <% end %>
+
+          <%= link to: todo_item_path(@conn, :delete, @todo, item), method: :delete, data: [confirm: "Are you sure?"] do %>
+            <i class="fas fa-times" style="color: red;"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

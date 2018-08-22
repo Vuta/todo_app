@@ -15,11 +15,11 @@
     <div class="container">
       <header class="header">
         <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
+          <ul class="nav nav-pills">
+            <li><%= link "Vu's Todo", to: todo_path(@conn, :index) %></li>
           </ul>
         </nav>
-        <span class="logo"></span>
+        <%# <span class="logo"></span> %>
       </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
@@ -30,6 +30,8 @@
       </main>
 
     </div> <!-- /container -->
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
