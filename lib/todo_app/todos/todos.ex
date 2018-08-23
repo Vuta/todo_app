@@ -1,4 +1,3 @@
-require IEx
 defmodule TodoApp.Todos do
   @moduledoc """
   Context of Todos
