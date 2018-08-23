@@ -25,10 +25,15 @@ defmodule TodoAppWeb.TodoController do
   end
 
   def show(conn, %{"id" => id}) do
-    todo = Todos.get_todo(id)
-    todo_items = Todos.sort_all_items_of_todo(todo)
-
-    render conn, "show.html", todo: todo, todo_items: todo_items
+    case Todos.get_todo(id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Todo not found")
+        |> redirect(to: todo_path(conn, :index))
+      todo ->
+        todo_items = Todos.sort_all_items_of_todo(todo)
+        render conn, "show.html", todo: todo, todo_items: todo_items
+    end
   end
 
   def delete(conn, %{"id" => id}) do
