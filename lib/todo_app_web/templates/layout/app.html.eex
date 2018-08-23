@@ -16,7 +16,15 @@
       <header class="header">
         <nav role="navigation">
           <ul class="nav nav-pills">
-            <li><%= link "Vu's Todo", to: todo_path(@conn, :index) %></li>
+            <%= if user_signed_in?(@conn) do %>
+              <li><%= link "#{current_user(@conn).full_name}'s todos", to: todo_path(@conn, :index) %></li>
+
+              <li class="pull-right"><%= link "Sign Out", to: session_path(@conn, :delete), method: :delete %></li>
+            <% else %>
+              <li><%= link "Todo App", to: todo_path(@conn, :index) %></li>
+              <li class="pull-right"><%= link "Sign Up", to: registration_path(@conn, :new) %></li>
+              <li class="pull-right"><%= link "Sign In", to: session_path(@conn, :new) %></li>
+            <% end %>
           </ul>
         </nav>
         <%# <span class="logo"></span> %>

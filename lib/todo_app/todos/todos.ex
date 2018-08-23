@@ -6,7 +6,10 @@ defmodule TodoApp.Todos do
   alias TodoApp.Repo
   alias TodoApp.Todos.Todo
 
-  def list_todos, do: Repo.all(Todo)
+  def list_todos(user) do
+    query = from todo in Todo, where: todo.user_id == ^user.id
+    Repo.all(query)
+  end
 
   def insert_todo(todo_params) do
     %Todo{}

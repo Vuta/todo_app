@@ -1,5 +1,6 @@
 defmodule TodoApp.Todos.TodosTest do
   use TodoApp.DataCase
+
   alias TodoApp.Todos
   alias TodoApp.Todos.Todo
   alias TodoApp.Items
@@ -8,7 +9,10 @@ defmodule TodoApp.Todos.TodosTest do
   @valid_item_attrs %{content: "This is an todo item", completed: false}
 
   test "insert_todo/1 with valid attr inserts a todo" do
-    assert {:ok, %Todo{} = todo} = Todos.insert_todo(@valid_attrs)
+    {:ok, user} = user_fixture()
+    valid_attrs = Map.put_new(@valid_attrs, :user_id, user.id)
+
+    assert {:ok, %Todo{} = todo} = Todos.insert_todo(valid_attrs)
     assert todo.name == "Sample Todo"
   end
 
@@ -19,17 +23,23 @@ defmodule TodoApp.Todos.TodosTest do
   end
 
   test "list_todos/0 returns all todos" do
-    {:ok, first_todo} = Todos.insert_todo(@valid_attrs)
-    {:ok, second_todo} = Todos.insert_todo(@valid_attrs)
+    {:ok, user} = user_fixture()
+    valid_attrs = Map.put_new(@valid_attrs, :user_id, user.id)
 
-    assert length(Todos.list_todos()) == 2
-    assert Todos.list_todos() == [first_todo, second_todo]
+    {:ok, first_todo} = Todos.insert_todo(valid_attrs)
+    {:ok, second_todo} = Todos.insert_todo(valid_attrs)
+
+    assert length(Todos.list_todos(user)) == 2
+    assert Todos.list_todos(user) == [first_todo, second_todo]
   end
 
   test "delete_todo/1 deleted a todo" do
-    {:ok, todo} = Todos.insert_todo(@valid_attrs)
+    {:ok, user} = user_fixture()
+    valid_attrs = Map.put_new(@valid_attrs, :user_id, user.id)
+
+    {:ok, todo} = Todos.insert_todo(valid_attrs)
     Todos.delete_todo(todo)
-    assert Todos.list_todos() == []
+    assert Todos.list_todos(user) == []
   end
 
   test "sort_all_items_of_todo/1 returns a list of todo's item sorted by inserted at" do

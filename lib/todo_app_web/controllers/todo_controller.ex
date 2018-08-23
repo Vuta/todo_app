@@ -1,10 +1,22 @@
 defmodule TodoAppWeb.TodoController do
   use TodoAppWeb, :controller
+  import TodoAppWeb.AuthController, only: [authenticate: 2]
+  plug :authenticate when action in [:new, :create, :show, :delete]
+
   alias TodoApp.Todos
   alias TodoApp.Todos.Todo
+  alias TodoApp.Auth
 
   def index(conn, _params) do
-    todos = Todos.list_todos()
+    todos =
+      case Auth.current_user(conn) do
+        nil ->
+          nil
+
+        user ->
+          Todos.list_todos(user)
+      end
+
     render conn, "index.html", todos: todos
   end
 
@@ -14,6 +26,7 @@ defmodule TodoAppWeb.TodoController do
   end
 
   def create(conn, %{"todo" => todo_params}) do
+    todo_params = Map.put_new(todo_params, "user_id", Auth.current_user(conn).id)
     case Todos.insert_todo(todo_params) do
       {:ok, todo} ->
         conn
