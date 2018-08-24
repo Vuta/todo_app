@@ -1,5 +1,8 @@
 defmodule TodoAppWeb.ItemController do
   use TodoAppWeb, :controller
+  import TodoAppWeb.AuthController, only: [authenticate: 2]
+  plug :authenticate when action in [:new, :create, :delete, :update_status]
+
   alias TodoApp.{Items, Todos}
   alias TodoApp.Items.Item
 

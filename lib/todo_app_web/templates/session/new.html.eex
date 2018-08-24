@@ -1,0 +1,15 @@
+<h1 class="text-center">Sign In</h1>
+
+<%= form_for @session_changeset, session_path(@conn, :create), [as: :session], fn(f) -> %>
+  <div class="form-group form-group-lg">
+    <%= email_input f, :email, placeholder: "Email", class: "form-control" %>
+  </div>
+
+  <div class="form-group form-group-lg">
+    <%= password_input f, :password, placeholder: "Password", class: "form-control" %>
+  </div>
+
+  <div class="form-group form-group-lg">
+    <%= submit "Sign In", class: "btn btn-block btn-success" %>
+  </div>
+<% end %>

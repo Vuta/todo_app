@@ -20,6 +20,7 @@ defmodule TodoAppWeb.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       import TodoAppWeb.Router.Helpers
+      import TodoApp.AuthHelper
 
       # The default endpoint for testing
       @endpoint TodoAppWeb.Endpoint
