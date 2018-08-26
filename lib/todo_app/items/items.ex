@@ -22,4 +22,11 @@ defmodule TodoApp.Items do
     |> Item.changeset(%{completed: !item.completed})
     |> Repo.update()
   end
+
+  def update_item(id, item_params) do
+    item = get_item(id)
+    item
+    |> Item.changeset(item_params)
+    |> Repo.update()
+  end
 end

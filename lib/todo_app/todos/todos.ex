@@ -8,6 +8,7 @@ defmodule TodoApp.Todos do
 
   def list_todos(user) do
     query = from todo in Todo, where: todo.user_id == ^user.id
+
     Repo.all(query)
   end
 
@@ -20,6 +21,13 @@ defmodule TodoApp.Todos do
   def get_todo(todo_id) do
     todo = Repo.get(Todo, todo_id)
     Repo.preload(todo, :items)
+  end
+
+  def update_todo(id, todo_params) do
+    todo = Repo.get(Todo, id)
+    todo
+    |> Todo.changeset(todo_params)
+    |> Repo.update()
   end
 
   def delete_todo(todo), do: Repo.delete(todo)

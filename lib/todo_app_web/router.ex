@@ -13,6 +13,10 @@ defmodule TodoAppWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :jwt_authenticated do
+    plug TodoApp.Guardian.AuthPipeline
+  end
+
   scope "/", TodoAppWeb do
     pipe_through :browser # Use the default browser stack
 
@@ -30,7 +34,25 @@ defmodule TodoAppWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", TodoAppWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TodoAppWeb, as: :api do
+    pipe_through :api
+
+    scope "/v1", Api.V1, as: :v1 do
+      post "/registrations", RegistrationController, :create
+      post "/sessions", SessionController, :create
+      delete "/sessions", SessionController, :delete
+    end
+  end
+
+  scope "/api", TodoAppWeb, as: :api do
+    pipe_through [:api, :jwt_authenticated]
+
+    scope "/v1", Api.V1, as: :v1 do
+      resources "/todos", TodoController, except: [:new, :edit] do
+        resources "/items", ItemController, except: [:new, :edit, :index] do
+          put "/update_status", ItemController, :update_status
+        end
+      end
+    end
+  end
 end
