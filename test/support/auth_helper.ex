@@ -18,7 +18,10 @@ defmodule TodoApp.AuthHelper do
   def signed_in(%{conn: conn} = config) do
     if full_name = config[:signed_in_as] do
       {:ok, user} = user_fixture(%{"full_name" => full_name})
-      conn = Plug.Conn.assign(conn, :current_user, user)
+      conn =
+        conn
+        |> Plug.Conn.assign(:current_user, user)
+        |> Plug.Test.init_test_session(current_user_id: user.id)
 
       {:ok, conn: conn, user: user}
     else

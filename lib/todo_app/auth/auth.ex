@@ -16,8 +16,9 @@ defmodule TodoApp.Auth do
   end
 
   def sign_out(conn) do
-    Plug.Conn.delete_session(conn, :current_user_id)
-    Plug.Conn.assign(conn, :current_user, nil)
+    conn
+    |> Plug.Conn.delete_session(:current_user_id)
+    |> Plug.Conn.assign(:current_user, nil)
   end
 
   def registration_user(user_params) do
@@ -26,14 +27,14 @@ defmodule TodoApp.Auth do
   end
 
   def current_user(conn) do
-    user = conn.assigns[:current_user]
+    user_id = Plug.Conn.get_session(conn, :current_user_id)
 
-    case user do
+    case user_id do
       nil ->
         nil
 
-      user ->
-        Repo.get(User, user.id)
+      user_id ->
+        Repo.get(User, user_id)
     end
   end
 
