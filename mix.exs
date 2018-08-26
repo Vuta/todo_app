@@ -43,7 +43,8 @@ defmodule TodoApp.Mixfile do
       {:cowboy, "~> 1.0"},
       {:credo, "~> 0.10.0", only: [:dev, :test], runtime: false},
       {:comeonin, "~> 4.0"},
-      {:argon2_elixir, "~> 1.2"}
+      {:argon2_elixir, "~> 1.2"},
+      {:guardian, "~> 1.0"}
     ]
   end
 
