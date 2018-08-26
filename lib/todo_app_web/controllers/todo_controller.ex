@@ -38,14 +38,23 @@ defmodule TodoAppWeb.TodoController do
   end
 
   def show(conn, %{"id" => id}) do
-    case Todos.get_todo(id) do
-      nil ->
-        conn
-        |> put_flash(:error, "Todo not found")
-        |> redirect(to: todo_path(conn, :index))
-      todo ->
-        todo_items = Todos.sort_all_items_of_todo(todo)
-        render conn, "show.html", todo: todo, todo_items: todo_items
+    current_user_id = Auth.current_user(conn).id
+    todo = Todos.get_todo(id)
+
+    if todo.user_id == current_user_id do
+      case Todos.get_todo(id) do
+        nil ->
+          conn
+          |> put_flash(:error, "Todo not found")
+          |> redirect(to: todo_path(conn, :index))
+        todo ->
+          todo_items = Todos.sort_all_items_of_todo(todo)
+          render conn, "show.html", todo: todo, todo_items: todo_items
+      end
+    else
+      conn
+      |> put_flash(:error, "Page not found")
+      |> redirect(to: todo_path(conn, :index))
     end
   end
 
