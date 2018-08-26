@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
 
-# Heroku: https://boiling-everglades-65593.herokuapp.com/
+# Heroku:  [`link`](https://boiling-everglades-65593.herokuapp.com/)
